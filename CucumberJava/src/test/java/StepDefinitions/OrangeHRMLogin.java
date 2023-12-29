@@ -1,11 +1,14 @@
 package StepDefinitions;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -33,18 +36,27 @@ public class OrangeHRMLogin {
 		System.out.println("URL found");
 	}
 
-	@When("user enters uname and pword")
-	public void credentails() {
-		driver.findElement(By.name("username")).sendKeys("Admin");
-		driver.findElement(By.name("password")).sendKeys("admin123");
+	@When("^user enters (.*) and (.*)$")
+	public void credentails(String uname, String pword) throws InterruptedException {
+		
+		driver.findElement(By.name("username")).sendKeys(uname);
+		driver.findElement(By.name("password")).sendKeys(pword);
 		driver.findElement(By.xpath("//button[@type='submit']")).click();
 		System.out.println("Credentails entered");
+		
+		Thread.sleep(4000);
 	}
 
 	@Then("user lands to the homwpage of OrangeHRM application")
 	public void homepage() {
-		driver.getPageSource().contains("Dashboard");
-		System.out.println("Homepage");
+		String ele1 = driver.getPageSource();
+		if (ele1.contains("Dashboard"))
+		System.out.println("Dashboard");
+		
+		String ele = driver.getPageSource();
+		if (ele.contains("Invalid credentials"))
+		System.out.println("Invalid credentials");
+		
 		driver.close();
 		driver.quit();
 	}
